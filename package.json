@@ -1,0 +1,149 @@
+{
+  "name": "flashback-diff",
+  "displayName": "Flashback Diff",
+  "description": "See any file as it was when your branch was born. Right-click → diff against the branch origin.",
+  "version": "1.0.0",
+  "publisher": "vhme",
+  "author": {
+    "name": "vhme"
+  },
+  "license": "MIT",
+  "icon": "images/icon.png",
+  "galleryBanner": {
+    "color": "#111827",
+    "theme": "dark"
+  },
+  "homepage": "https://github.com/vhme/flashback-diff#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vhme/flashback-diff.git"
+  },
+  "bugs": {
+    "url": "https://github.com/vhme/flashback-diff/issues"
+  },
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "SCM Providers",
+    "Other"
+  ],
+  "keywords": [
+    "git",
+    "diff",
+    "branch",
+    "merge-base",
+    "compare",
+    "code review",
+    "pull request",
+    "feature branch"
+  ],
+  "main": "./out/src/extension.js",
+  "extensionDependencies": [
+    "vscode.git"
+  ],
+  "activationEvents": [],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": false,
+      "description": "Flashback Diff runs git commands in the workspace, so it requires a trusted workspace."
+    },
+    "virtualWorkspaces": false
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "flashbackDiff.compare",
+        "title": "Compare with Branch Origin",
+        "category": "Flashback Diff",
+        "icon": "$(git-compare)"
+      },
+      {
+        "command": "flashbackDiff.chooseOrigin",
+        "title": "Choose Branch Origin…",
+        "category": "Flashback Diff"
+      },
+      {
+        "command": "flashbackDiff.resetOrigin",
+        "title": "Reset Branch Origin Detection",
+        "category": "Flashback Diff"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "flashbackDiff.compare",
+          "when": "!explorerResourceIsFolder",
+          "group": "3_compare@10"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "flashbackDiff.compare",
+          "when": "resourceScheme == file",
+          "group": "3_compare@10"
+        }
+      ],
+      "editor/title/context": [
+        {
+          "command": "flashbackDiff.compare",
+          "when": "resourceScheme == file",
+          "group": "3_compare@10"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "flashbackDiff.compare",
+          "when": "resourceScheme == file && config.flashbackDiff.showTitleButton",
+          "group": "navigation"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Flashback Diff",
+      "properties": {
+        "flashbackDiff.baseBranch": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Always compare against this branch (e.g. `main`, `origin/develop`). Leave empty for automatic detection."
+        },
+        "flashbackDiff.preferredBranches": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "main",
+            "master",
+            "develop",
+            "dev"
+          ],
+          "markdownDescription": "Branches preferred by automatic detection when several candidates are equally close."
+        },
+        "flashbackDiff.showTitleButton": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Show the **Compare with Branch Origin** button in the editor title bar."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src test",
+    "test": "npm run compile && node --test out/test/*.test.js",
+    "package": "vsce package",
+    "publish": "vsce publish"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.0.0",
+    "@types/node": "^20.0.0",
+    "@types/vscode": "~1.75.0",
+    "@vscode/vsce": "^3.0.0",
+    "eslint": "^9.0.0",
+    "typescript": "^5.4.0",
+    "typescript-eslint": "^8.0.0"
+  }
+}
